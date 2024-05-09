@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import searchImages from '../api';
+import BooksContext from '../context/books';
 import BookEdit from './BookEdit';
 
-export default function BookShow({book,deleteBook,onEdit}){
+export default function BookShow({book}){
     const [showEdit,setShowEdit] = useState(false);
+    const {deleteBookById,updateBook} = useContext(BooksContext);
     const handleDelete = ()=>{
-        deleteBook(book.id);
+        deleteBookById(book.id);
     }
 
     const handleEdit = ()=>{
@@ -16,7 +18,7 @@ export default function BookShow({book,deleteBook,onEdit}){
     const handleSubmit = async (title)=>{
         const url = await searchImages(title);
         setShowEdit(false);
-        onEdit(book.id,title,url[0].urls.small);
+        updateBook(book.id,title,url[0].urls.small);
         
     }
 

@@ -1,7 +1,8 @@
-import { useState } from 'react';
-
-export default function BookCreate({imageSubmit}){
+import { useContext, useState } from 'react';
+import BooksContext from '../context/books';
+export default function BookCreate(){
      const [title,setTitle] = useState('');
+     const {imageSubmit} = useContext(BooksContext);
      
      const handleSubmit = (e)=>{
         e.preventDefault();
