@@ -13,6 +13,7 @@ export default function BookEdit({book,onSubmit}){
             <label>Title</label>
             <input className='input' value={value} onChange={(e)=>setValue(e.target.value)} />
             <button className='button is-primary'>Save</button>
+            
         </form>
     </div>
 }

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import searchImages from './api';
 import BookCreate from './components/BookCreate';
 import BookList from './components/BookList';
@@ -6,22 +7,40 @@ import BookList from './components/BookList';
 
 export default function App(){
     const [books,setBooks] = useState([]);
-    
 
-    const deleteBookById = (id)=>{
+
+    const fetchBooks = async ()=>{
+        const response = await axios.get('http://localhost:3001/books');
+
+        setBooks(response.data);
+
+    }
+
+    useEffect(()=>{
+        fetchBooks();
+    },[]);
+
+    const deleteBookById = async (id)=>{
+        await axios.delete(` http://localhost:3001/books/${id}`);
+
         setBooks(books.filter(book=>book.id!==id));
     }
 
-    const createBook = (title,imageUrl)=>{
-        setBooks([...books,{id:Date.now(),title,image:imageUrl}]);
+    const createBook = async (newTitle,imageUrl)=>{
+      const response = await axios.post('http://localhost:3001/books',{title:newTitle,image:imageUrl});
+
+        setBooks([...books,response.data]);
+        
         
     }
 
     const updateBook = async (id,title,url)=>{
 
+        const response = await axios.put(` http://localhost:3001/books/${id}`,{title:title,image:url});
+
         const updated = await books.map((book)=>{
             if(book.id===id){
-                return {...book,title,image:url}
+                return {...book,...response.data}
             }
             return book;
         });
@@ -32,7 +51,7 @@ export default function App(){
         const result = await searchImages(term);
         createBook(term,result[0].urls.small);
 
-        return result[0].urls.small;
+        
 
     }
 
